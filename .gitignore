@@ -1,0 +1,9 @@
+*/node_modules
+*package-lock.json
+*npm-debug.log
+
+*.tfstate
+*.tfstate.*
+**/.terraform/*
+*.tfvars.json
+*.terraform.lock.hcl
