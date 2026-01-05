@@ -32,22 +32,22 @@ jobs:
 
       - name: Start ASG Instance Refresh
         run: |
-          # 1. Dynamically get the Launch Template Name assigned to the ASG
-          LT_NAME=$(aws autoscaling describe-auto-scaling-groups \
+          # 1. Get the Template ID (more reliable than Name)
+          LT_ID=$(aws autoscaling describe-auto-scaling-groups \
             --auto-scaling-group-names "$ASG_NAME" \
             --region "$AWS_REGION" \
-            --query 'AutoScalingGroups[0].LaunchTemplate.LaunchTemplateName' \
+            --query 'AutoScalingGroups[0].LaunchTemplate.LaunchTemplateId' \
             --output text)
           
-          echo "Detected Launch Template: $LT_NAME"
+          echo "Detected Launch Template ID: $LT_ID"
 
-          # 2. Trigger the refresh using the dynamic name
+          # 2. Trigger the refresh using ID and AutoRollback
           REFRESH_ID=$(aws autoscaling start-instance-refresh \
             --auto-scaling-group-name "$ASG_NAME" \
             --strategy Rolling \
             --desired-configuration "{
               \"LaunchTemplate\": {
-                \"LaunchTemplateName\": \"$LT_NAME\", 
+                \"LaunchTemplateId\": \"$LT_ID\", 
                 \"Version\": \"\$Latest\"
               }
             }" \
