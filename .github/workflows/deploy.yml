@@ -32,13 +32,19 @@ jobs:
 
       - name: Start ASG Instance Refresh
         run: |
-          # Trigger the refresh with AutoRollback enabled
+          # We specify the Launch Template so AutoRollback has a reference point
           REFRESH_ID=$(aws autoscaling start-instance-refresh \
             --auto-scaling-group-name "$ASG_NAME" \
             --strategy Rolling \
+            --desired-configuration '{
+              "LaunchTemplate": {
+                "LaunchTemplateName": "my-node-app-template", 
+                "Version": "$Latest"
+              }
+            }' \
             --preferences '{
               "MinHealthyPercentage": 50,
-              "InstanceWarmup": 300,
+              "InstanceWarmup": 180,
               "AutoRollback": true
             }' \
             --region "$AWS_REGION" \
