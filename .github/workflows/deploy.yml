@@ -32,31 +32,11 @@ jobs:
 
       - name: Start ASG Instance Refresh
         run: |
-          # 1. Get the Template ID (more reliable than Name)
-          LT_ID=$(aws autoscaling describe-auto-scaling-groups \
-            --auto-scaling-group-names "$ASG_NAME" \
-            --region "$AWS_REGION" \
-            --query 'AutoScalingGroups[0].LaunchTemplate.LaunchTemplateId' \
-            --output text)
-          
-          echo "Detected Launch Template ID: $LT_ID"
-
-          # 2. Trigger the refresh using ID and AutoRollback
-          REFRESH_ID=$(aws autoscaling start-instance-refresh \
+          aws autoscaling start-instance-refresh \
             --auto-scaling-group-name "$ASG_NAME" \
             --strategy Rolling \
-            --desired-configuration "{
-              \"LaunchTemplate\": {
-                \"LaunchTemplateId\": \"$LT_ID\", 
-                \"Version\": \"\$Latest\"
-              }
-            }" \
             --preferences '{
               "MinHealthyPercentage": 50,
-              "InstanceWarmup": 180,
-              "AutoRollback": true
+              "InstanceWarmup": 180
             }' \
-            --region "$AWS_REGION" \
-            --query 'InstanceRefreshId' --output text)
-          
-          echo "Refresh started with ID: $REFRESH_ID"
+            --region "$AWS_REGION"
