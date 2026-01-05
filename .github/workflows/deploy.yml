@@ -32,11 +32,16 @@ jobs:
 
       - name: Start ASG Instance Refresh
         run: |
-          aws autoscaling start-instance-refresh \
+          # Trigger the refresh with AutoRollback enabled
+          REFRESH_ID=$(aws autoscaling start-instance-refresh \
             --auto-scaling-group-name "$ASG_NAME" \
             --strategy Rolling \
             --preferences '{
               "MinHealthyPercentage": 50,
-              "InstanceWarmup": 90
+              "InstanceWarmup": 300,
+              "AutoRollback": true
             }' \
-            --region "$AWS_REGION"
+            --region "$AWS_REGION" \
+            --query 'InstanceRefreshId' --output text)
+          
+          echo "Refresh started with ID: $REFRESH_ID"
