@@ -4,6 +4,7 @@
 
 ## Project Overview
 This project demonstrates a complete **end-to-end CI/CD pipeline** for deploying a Node.js application on AWS using **Terraform** and **GitHub Actions**.  
+
 All infrastructure is provisioned as code, and application deployments are fully automated with **zero-downtime rolling updates** using Auto Scaling Groups and an Application Load Balancer.
 
 A **GitHub self-hosted runner** is deployed on a private EC2 instance without a public IP. Secure access and automation are achieved using **AWS Systems Manager (SSM)** and **Parameter Store**, eliminating the need for SSH keys or hardcoded secrets.
