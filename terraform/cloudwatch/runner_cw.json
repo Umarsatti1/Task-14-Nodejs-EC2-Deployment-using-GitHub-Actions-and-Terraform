@@ -1,0 +1,24 @@
+{
+  "agent": {
+    "metrics_collection_interval": 60,
+    "run_as_user": "root"
+  },
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/home/ubuntu/actions-runner/_diag/*.log",
+            "log_group_name": "github-runner",
+            "log_stream_name": "{instance_id}/runner-logs"
+          },
+          {
+            "file_path": "/var/log/cloud-init.log",
+            "log_group_name": "github-runner",
+            "log_stream_name": "{instance_id}/cloud-init"
+          }
+        ]
+      }
+    }
+  }
+}
