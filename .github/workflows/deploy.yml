@@ -1,4 +1,4 @@
-name: Deploy Node.js App (ASG Rolling Refresh)
+name: Deploy Node.js App using ASG Rolling Update
 
 on:
   workflow_dispatch:
